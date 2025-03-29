@@ -1,31 +1,23 @@
-# IoT-Based Automatic Vehicle Accident Detection and Rescue System 🚗💥  
+# IoT-Based Automatic Vehicle Accident Detection and Rescue System 🚗⚠️  
 
-## 🔹 Introduction  
-This project detects vehicle accidents using an **MPU6050 sensor** and sends emergency alerts with **GPS location** via a **GSM module**. It helps reduce response time and improves accident rescue operations.  
+This project is an IoT-based system that detects vehicle accidents and sends emergency alerts automatically.  
 
-## 🔹 Features  
-✅ Automatic **Accident Detection**  
-✅ Real-time **GPS Tracking**  README.md
-✅ **Emergency SMS Alert System**  
-✅ **Buzzer Alert** for local awareness  
+## 📌 Features  
+✅ Accident detection using MPU6050 Sensor  
+✅ GPS-based location tracking  
+✅ GSM module for sending emergency SMS  
+✅ Real-time monitoring  
 
-## 🔹 Components Used  
-- Arduino Uno  
-- MPU6050 (Accelerometer + Gyroscope)  
-- GPS NEO-6M  
-- GSM 800L Module  
-- Buzzer  
-- 12V Battery  
+## 📁 Project Structure  
+- **src/** → Contains the Arduino (`.ino`) code  
+- **docs/** → Reports, circuit diagrams, and project documentation  
+- **images/** → Project images and screenshots  
 
-## 🔹 How It Works  
-1️⃣ **Detects accident** using sensor data  
-2️⃣ **Fetches location** via GPS  
-3️⃣ **Sends SMS alert** using GSM  README.md
-4️⃣ **Activates buzzer** for nearby help  
+## 🚀 Getting Started  
+1. Upload the `accident_detection.ino` file to your Arduino.  
+2. Connect the required sensors and modules.  
+3. Run the system and test the accident detection.  
 
-## 🔹 Installation & Setup  
-1. Install **Arduino IDE**  
-2. Upload code from `src/accident_detection.ino`  
-3. Connect components as per **circuit diagram**  
+## 📜 License  
+This project is open-source under the **MIT License**.  
 
-## 📂 **Project Structure**  
