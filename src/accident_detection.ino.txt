@@ -1,0 +1,148 @@
+#include <Wire.h>
+#include <SoftwareSerial.h>
+
+// GSM module pins
+SoftwareSerial gsmSerial(7, 8); // RX, TX
+
+// MPU6050 I2C address
+const int MPU_ADDR = 0x68;
+
+// LED and Buzzer pins
+#define LED_PIN 12
+#define BUZZER_PIN 13
+
+// Variables to store accelerometer values
+int16_t accelX, accelY, accelZ;
+const int tiltThreshold = 16000;
+const int decelerationThreshold = 15000;
+
+// Emergency contacts
+const String FAMILY_CONTACT = "+919380498007";
+const String AMBULANCE_CONTACT = "+919381297604";
+
+// Updated Google Maps link
+const String LOCATION_LINK = "https://maps.app.goo.gl/ALTewBAjXJC1HrZy5";
+
+bool alertTriggered = false;
+
+void setup() {
+  Serial.begin(9600);
+  gsmSerial.begin(9600);
+
+  // Initialize MPU6050
+  Wire.begin();
+  Wire.beginTransmission(MPU_ADDR);
+  Wire.write(0x6B);
+  Wire.write(0);
+  Wire.endTransmission();
+
+  // Initialize LED and Buzzer
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  Serial.println("Initializing system...");
+  initGSM();
+}
+
+void loop() {
+  if (!alertTriggered) {
+    readMPU6050();
+
+    // Check for sudden tilt or deceleration
+    if (abs(accelX) > tiltThreshold || abs(accelY) > tiltThreshold )
+        //(abs(accelX) < 1000 && abs(accelY) < 1000))
+         {
+      
+      Serial.println("Emergency detected!");
+
+      // Turn on buzzer
+      digitalWrite(BUZZER_PIN, HIGH);
+      Serial.println("Buzzer activated!");
+
+      alertTriggered = true;
+
+      String alertMessage = "🚨 Emergency Alert! An accident has occurred. Sudden tilt or deceleration detected! Immediate assistance required. Location: " + LOCATION_LINK;
+
+      Serial.println("Sending SMS to Family...");
+      sendSMS(FAMILY_CONTACT, alertMessage);
+      delay(2000);
+
+      Serial.println("Making calls to Family...");
+      makeCall(FAMILY_CONTACT);
+      delay(30000);
+
+      Serial.println("Sending SMS to Ambulance...");
+      sendSMS(AMBULANCE_CONTACT, alertMessage);
+
+      delay(2000);
+      Serial.println("Making calls to Ambulance...");
+      makeCall(AMBULANCE_CONTACT);
+
+      delay(30000);
+
+      gsmSerial.println("ATH");  // End calls
+
+      Serial.println("Calls ended.");
+
+      // Turn off buzzer after the emergency is handled
+      digitalWrite(BUZZER_PIN, LOW);
+      Serial.println("Buzzer deactivated.");
+    }
+  }
+
+  delay(500);
+}
+
+void initGSM() {
+  gsmSerial.println("AT");
+  delay(1000);
+
+  if (gsmSerial.available()) {
+    while (gsmSerial.available()) {
+      Serial.write(gsmSerial.read());
+    }
+  } else {
+    Serial.println("GSM module not responding.");
+    while (true);
+  }
+}
+
+void readMPU6050() {
+  Wire.beginTransmission(MPU_ADDR);
+  Wire.write(0x3B);
+  Wire.endTransmission(false);
+  Wire.requestFrom(MPU_ADDR, 6, true);
+
+  accelX = Wire.read() << 8 | Wire.read();
+  accelY = Wire.read() << 8 | Wire.read();
+  accelZ = Wire.read() << 8 | Wire.read();
+
+  Serial.print("AccelX: "); Serial.print(accelX);
+  Serial.print(" AccelY: "); Serial.println(accelY);
+}
+
+void sendSMS(String phoneNumber, String message) {
+  gsmSerial.println("AT+CMGF=1");
+  delay(1000);
+
+  gsmSerial.print("AT+CMGS=\"");
+  gsmSerial.print(phoneNumber);
+  gsmSerial.println("\"");
+  delay(1000);
+
+  gsmSerial.print(message);
+  delay(1000);
+
+  gsmSerial.write(26);  // CTRL+Z to send the message
+  delay(3000);
+
+  Serial.println("SMS sent to: " + phoneNumber);
+}
+
+void makeCall(String phoneNumber) {
+  gsmSerial.print("ATD");
+  gsmSerial.print(phoneNumber);
+  gsmSerial.println(";");
+
+  Serial.println("Call connected to: " + phoneNumber);
+}

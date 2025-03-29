@@ -1,0 +1,79 @@
+IoT-Based Automatic Vehicle Accident Detection and Rescue System
+
+1. Introduction
+Accidents occur frequently, and reducing response time can save lives. This project aims to develop an IoT-based accident detection and rescue system that automatically detects accidents and alerts emergency contacts. The system integrates sensors with a microcontroller and uses GSM and GPS modules to send real-time alerts.
+
+2. Features
+✅ Accident Detection: Detects collisions using an accelerometer & gyroscope (MPU6050).
+✅ Real-Time Location Tracking: Sends GPS coordinates of the accident location.
+✅ Automated Alert System: Sends SMS alerts via GSM 800L module.
+✅ Emergency Contact Notification: Notifies predefined contacts with location details.
+
+3. Components Used
+Arduino Uno (Microcontroller)
+
+MPU6050 (Accelerometer + Gyroscope)
+
+GPS NEO-6M (Location Tracking)
+
+GSM 800L Module (For SMS Alerts)
+
+12V Battery (Power Supply)
+
+Buzzer (For Local Alert)
+
+4. Working Principle
+Data Collection:
+
+The MPU6050 sensor continuously monitors vehicle acceleration and angular velocity.
+
+Sudden changes beyond a threshold indicate a possible accident.
+
+Accident Detection:
+
+If a crash is detected, the Arduino processes the data and triggers an emergency response.
+
+Location Tracking & Alert:
+
+The GPS module collects the real-time location of the accident.
+
+The GSM module sends an SMS alert to predefined emergency contacts, including location details.
+
+Buzzer Activation:
+
+The system activates a buzzer as a local alert for nearby people to assist immediately.
+
+5. Circuit Diagram
+📌 Example:
+👉 For the complete circuit diagram, refer to /images/circuit_diagram.png
+
+6. Code Explanation
+The system is programmed using Arduino IDE with the following main functionalities:
+
+Reading sensor values from MPU6050
+
+Threshold-based accident detection
+
+Fetching GPS coordinates and sending SMS using GSM
+
+Activating buzzer for local alert
+
+The complete code is available in /src/accident_detection.ino.
+
+7. How to Run the Project
+Hardware Setup
+Connect the MPU6050 sensor, GPS, and GSM modules to the Arduino as per the circuit diagram.
+
+Power the system using a 12V battery.
+
+Software Setup
+Install Arduino IDE on your PC.
+
+Install required libraries for MPU6050, GPS, and GSM.
+
+Upload the code from src/accident_detection.ino to your Arduino board.
+
+8. Future Improvements
+🚀 Integration with Cloud: Store accident data for analysis.
+🚀 Voice Alert System: Notify nearby people using a speaker.
+🚀 AI-based Accident Severity Detection: Improve accuracy using machine learning.
